@@ -1,26 +1,31 @@
 import { useDispatch } from "react-redux";
 import {
   setTrainer,
+  setActiveTrainer,
   removeTrainer,
   addPokemonToTrainer,
   removePokemonFromTrainer,
-  Trainer,
+  ReduxTrainer,
 } from "../store/slices/trainer-slice";
-import { Pokemon } from "../service/api";
+import { IPokemon } from "../type/Pokemon";
 
 export const useDispatcher = () => {
   const dispatch = useDispatch();
 
   return {
-    setTrainer: (trainer: Trainer) => {
+    setTrainer: (trainer: ReduxTrainer) => {
       dispatch(setTrainer(trainer));
+    },
+
+    setActiveTrainer: (trainerId: string) => {
+      dispatch(setActiveTrainer(trainerId));
     },
 
     removeTrainer: (trainerId: string) => {
       dispatch(removeTrainer(trainerId));
     },
 
-    addPokemonToTrainer: (trainerId: string, pokemon: Pokemon) => {
+    addPokemonToTrainer: (trainerId: string, pokemon: IPokemon) => {
       dispatch(addPokemonToTrainer({ trainerId, pokemon }));
     },
 
@@ -34,13 +39,28 @@ export const useDispatcher = () => {
     /**
      * Crée un nouveau dresseur
      */
+
     createTrainer: (name: string, region: string = "") => {
-      const newTrainer: Trainer = {
+      const timestamp = Date.now();
+      const randomNum = Math.random();
+
+      const newTrainer: ReduxTrainer = {
         id: crypto.randomUUID(),
         name,
         region,
         pokemons: [],
+
+        age: 10,
+        money: 1000,
+        level: 1,
+        exp: 0,
+        gender: "Homme",
+        height: 170,
+        weight: 60,
+        description: `${name} est un dresseur de la région ${region}.`,
+        image: `https://cataas.com/cat?t=${timestamp}&rand=${randomNum}`,
       };
+
       dispatch(setTrainer(newTrainer));
       return newTrainer.id;
     },

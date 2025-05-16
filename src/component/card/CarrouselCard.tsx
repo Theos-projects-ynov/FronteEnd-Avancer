@@ -1,23 +1,33 @@
-import { ITrainer } from "../../type/Trainer";
-import IconProfils from "./IconProfils";
 import "../../style/component/card/carrouselCard.scss";
-import { useEffect } from "react";
+import IconProfils from "./IconProfils";
+import { useTrainerSelector } from "../../hooks/useSelector";
+import { useDispatcher } from "../../hooks/useDispatcher";
 
-function CarrouselCard({ trainers, handleTrainerActive, trainersActive }: { trainers: ITrainer[], handleTrainerActive: (id: number) => void, trainersActive: ITrainer | null }) {
+function CarrouselCard() {
+  const { trainers, activeTrainer } = useTrainerSelector();
+  const { setActiveTrainer } = useDispatcher();
 
-    useEffect(() => {
-        console.log("trainers DEDE : ", trainers);
-    }, [trainers]);
+  const handleTrainerActive = (id: number) => {
+    if (trainers[id]) {
+      setActiveTrainer(trainers[id].id);
+    }
+  };
 
-    return (
-        <div className="carrousel-card">
-            <div className="carrousel-card__container">
-                {trainers.map((trainer, index) => (
-                    <IconProfils key={trainer.name} image={trainer.image} handleTrainerActive={handleTrainerActive} id={index} isActive={trainer.name === trainersActive?.name} />
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div className="carrousel-card">
+      <div className="carrousel-card__container">
+        {trainers.map((trainer, index) => (
+          <IconProfils
+            key={trainer.id}
+            image={trainer.image}
+            handleTrainerActive={handleTrainerActive}
+            id={index}
+            isActive={trainer.id === activeTrainer?.id}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default CarrouselCard;

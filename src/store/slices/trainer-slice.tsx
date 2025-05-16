@@ -1,17 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ITrainer } from "../../type/Trainer";
 import { Pokemon } from "../../service/api";
 
-// Type pour un dresseur individuel
-export interface Trainer {
+export interface ReduxTrainer extends ITrainer {
   id: string;
-  name: string;
-  region: string;
   pokemons: Pokemon[];
 }
 
-// Type pour l'état du slice
 interface TrainerState {
-  trainers: Record<string, Trainer>;
+  trainers: Record<string, ReduxTrainer>;
   activeTrainerId: string | null;
 }
 
@@ -24,16 +21,25 @@ export const trainerSlice = createSlice({
   name: "trainer",
   initialState,
   reducers: {
-    // Ajouter ou mettre à jour un dresseur
-    setTrainer: (state, action: PayloadAction<Trainer>) => {
+    setTrainer: (state, action: PayloadAction<ReduxTrainer>) => {
       const trainer = action.payload;
       state.trainers[trainer.id] = trainer;
+
+      if (Object.keys(state.trainers).length === 1) {
+        state.activeTrainerId = trainer.id;
+      }
+    },
+
+    setActiveTrainer: (state, action: PayloadAction<string>) => {
+      if (state.trainers[action.payload]) {
+        state.activeTrainerId = action.payload;
+      }
     },
 
     removeTrainer: (state, action: PayloadAction<string>) => {
       delete state.trainers[action.payload];
       if (state.activeTrainerId === action.payload) {
-        state.activeTrainerId = null;
+        state.activeTrainerId = Object.keys(state.trainers)[0] || null;
       }
     },
 
@@ -63,12 +69,12 @@ export const trainerSlice = createSlice({
 
 export const {
   setTrainer,
+  setActiveTrainer,
   removeTrainer,
   addPokemonToTrainer,
   removePokemonFromTrainer,
 } = trainerSlice.actions;
 
-// Sélecteurs
 export const selectTrainers = (state: { trainer: TrainerState }) =>
   Object.values(state.trainer.trainers);
 

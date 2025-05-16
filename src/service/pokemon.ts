@@ -1,8 +1,11 @@
+import { useGetPokemonByGenerationQuery } from "../api/PokemonAPI";
 
+export function usePokemonService() {
+  const { data, isLoading, isError } = useGetPokemonByGenerationQuery(1);
 
-export async function getPokemon() {
-    const response = await fetch(`https://tyradex.app/api/v1/gen/1`);
-    const data = await response.json();
-    return data;
+  return {
+    pokemons: data || [],
+    isLoading,
+    isError,
+  };
 }
-

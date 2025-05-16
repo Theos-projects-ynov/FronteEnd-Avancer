@@ -9,6 +9,9 @@ function Navbar() {
         <Link to="/" className="btn-navbar">
           Home
         </Link>
+        <Link to="/dungeon" className="btn-navbar">
+          Donjon
+        </Link>
         <Link to="/profil" className="btn-navbar">
           Profil
         </Link>

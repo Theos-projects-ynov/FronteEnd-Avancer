@@ -25,36 +25,6 @@
     margin-bottom: 2rem;
   }
 
-  .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    .generation-input {
-      text-align: center;
-      width: 100px;
-      height: 40px;
-      border-radius: 5px;
-      border: 1px solid #fff;
-      background-color: #000;
-      color: #fff;
-      padding: 0 10px;
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    .load-button {
-      width: auto;
-      height: 40px;
-      border-radius: 5px;
-      border: 1px solid #fff;
-      background-color: #000;
-    }
-  }
-
   .loading-container {
     display: flex;
     justify-content: center;
@@ -148,9 +118,14 @@
   .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 10px;
 
     .load-button {
+      width: auto;
+      height: 40px;
+
       background-color: #1976d2;
       color: white;
       padding: 8px 16px;
@@ -173,6 +148,21 @@
         color: rgba(0, 0, 0, 0.26);
         box-shadow: none;
         cursor: default;
+      }
+    }
+
+    .generation-input {
+      text-align: center;
+      width: 100px;
+      height: 40px;
+      border-radius: 5px;
+      border: 1px solid #fff;
+      background-color: #000;
+      color: #fff;
+      padding: 0 10px;
+
+      &:focus {
+        outline: none;
       }
     }
   }

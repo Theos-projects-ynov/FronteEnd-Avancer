@@ -4,6 +4,7 @@ import ProfilPage from "../component/page/ProfilPage";
 import Home from "../component/page/Home";
 import NotFound from "../component/page/NotFound";
 import PokemonPage from "../component/page/PokemonPage";
+import DungeonPage from "../component/page/Dungeon";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/profil",
         element: <ProfilPage />,
+      },
+      {
+        path: "/dungeon",
+        element: <DungeonPage />,
       },
       {
         path: "*",

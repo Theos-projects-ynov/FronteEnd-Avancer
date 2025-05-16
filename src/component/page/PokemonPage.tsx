@@ -1,36 +1,40 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPokemonById, Pokemon } from "../../service/api";
+import { Pokemon } from "../../service/api";
 import "../../style/page/pokemonPage.scss";
+import { useGetPokemonQuery } from "../../api/PokemonAPI";
 
 function PokemonPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+
+  const { data, isLoading, isError } = useGetPokemonQuery(id || "");
 
   useEffect(() => {
-    const fetchPokemon = async () => {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const data = await getPokemonById(id);
-        setPokemon(data);
-      } catch (error) {
-        console.error("Erreur lors de la récupération du Pokémon:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (data) {
+      setPokemon(data);
+    }
+  }, [data]);
 
-    fetchPokemon();
-  }, [id]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="pokemon-page">
         <div className="loading-container">
           <div className="spinner"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="pokemon-page">
+        <div className="error-container">
+          <h2 className="error-message">Pokémon non trouvé</h2>
+          <button className="btn btn-primary" onClick={() => navigate(-1)}>
+            Retour
+          </button>
         </div>
       </div>
     );
