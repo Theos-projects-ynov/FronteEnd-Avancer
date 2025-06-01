@@ -7,6 +7,7 @@ import PokemonPage from "../component/page/PokemonPage";
 import DungeonPage from "../component/page/Dungeon";
 import Login from "../component/page/Login";
 import Register from "../component/page/Register";
+import Logout from "../component/page/logout";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
 ]);
 

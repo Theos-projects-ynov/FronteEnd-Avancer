@@ -12,6 +12,7 @@ import {
   Alert,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { AuthService } from "../../service/authService";
 import "../../style/page/login.scss";
 
 const Login = () => {
@@ -20,29 +21,31 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setIsLoading(true);
 
     // Validation simple
     if (!email || !password) {
       setError("Veuillez remplir tous les champs");
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
-    // Simulation de connexion
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await AuthService.login({ email, password });
+      console.log("Connexion réussie:", result);
+      localStorage.setItem("token", result.token);
       // Redirection vers la page d'accueil après connexion
       navigate("/");
-    } catch {
-      setError("Erreur de connexion. Vérifiez vos identifiants.");
+    } catch (error) {
+      console.error("Erreur de connexion:", error);
+      setError(error instanceof Error ? error.message : "Erreur de connexion. Vérifiez vos identifiants.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -107,11 +110,11 @@ const Login = () => {
                 fullWidth
                 variant="contained"
                 size="large"
-                disabled={loading}
+                disabled={isLoading}
                 className="login-button"
                 sx={{ mt: 3, mb: 2 }}
               >
-                {loading ? "Connexion..." : "Se connecter"}
+                {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
 
               <Box className="login-links">

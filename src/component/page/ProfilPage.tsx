@@ -1,6 +1,5 @@
 import "../../style/page/profilPage.scss";
 import CardProfil from "../card/CardProfil";
-import CarrouselCard from "../card/CarrouselCard";
 import { useState } from "react";
 import { useDispatcher } from "../../hooks/useDispatcher";
 import { Box, TextField, Button, Typography } from "@mui/material";
@@ -19,13 +18,16 @@ function ProfilPage() {
     }
   };
 
+  
+
   return (
     <>
-      <Typography variant="h4" className="profil-page__title">
-        Profil
-      </Typography>
+      <div className="profil-page">
+        <Typography variant="h4" className="profil-page__title">
+          Profil
+        </Typography>
 
-      <CarrouselCard />
+      {/* <CarrouselCard /> */}
       <CardProfil />
 
       <Box sx={{ mt: 4, display: "flex", gap: 2, alignItems: "center" }}>
@@ -49,6 +51,7 @@ function ProfilPage() {
           Créer un dresseur
         </Button>
       </Box>
+      </div>
     </>
   );
 }

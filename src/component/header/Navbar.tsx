@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "../../style/component/header/navbar.scss";
+import { useEffect, useState } from "react";
 
 function Navbar() {
 
@@ -7,9 +8,13 @@ function Navbar() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    console.log("token", token, " : ", token !== null);
+
+    if (token !== null) {
+      console.log("QUOI token", token, " : ", token !== null);
       setIsLoggedIn(true);
     }
+
   }, []);
 
   return (
@@ -23,9 +28,14 @@ function Navbar() {
           Donjon
         </Link>
         {isLoggedIn ? (
-          <Link to="/profil" className="btn-navbar">
-            Profil
-          </Link>
+          <>
+            <Link to="/profil" className="btn-navbar">
+              Profil
+            </Link>
+            <Link to="/logout" className="btn-navbar">
+              Logout
+            </Link>
+          </>
         ) : (
           <>
             <Link to="/login" className="btn-navbar">

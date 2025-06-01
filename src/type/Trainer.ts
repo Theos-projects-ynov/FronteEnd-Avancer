@@ -20,3 +20,39 @@ export type ITrainer = {
   description: string;
   image: string;
 };
+
+export interface Trainer {
+  id: string;
+  name: string;
+  email: string;
+  region: string;
+  level: number;
+  exp: number;
+  gender: string;
+  height: number;
+  weight: number;
+  description: string;
+  image: string;
+  badge: string[];
+  pokemonStarter: unknown | null;
+  teamPokemon: unknown | null;
+  isAdmin: boolean;
+  createdAt: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  trainer: Trainer;
+}

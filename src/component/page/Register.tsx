@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
-  Box,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  IconButton,
-  InputAdornment,
-  Alert,
-  FormControlLabel,
-  Checkbox,
+    Box,
+    Card,
+    CardContent,
+    TextField,
+    Button,
+    Typography,
+    IconButton,
+    InputAdornment,
+    Alert,
+    FormControlLabel,
+    Checkbox,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { AuthService } from "../../service/authService";
 import "../../style/page/register.scss";
 
 const Register = () => {
@@ -27,47 +28,53 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setIsLoading(true);
 
     // Validation
     if (!firstName || !lastName || !email || !password) {
       setError("Veuillez remplir tous les champs");
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
     if (password.length < 6) {
       setError("Le mot de passe doit contenir au moins 6 caractères");
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
     if (!acceptTerms) {
       setError("Vous devez accepter les conditions d'utilisation");
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
-    // Simulation d'inscription
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const result = await AuthService.register({ 
+        firstName, 
+        lastName, 
+        email, 
+        password 
+      });
+      console.log("Inscription réussie:", result);
       // Redirection vers la page de connexion après inscription
       navigate("/login");
-    } catch {
-      setError("Erreur lors de l'inscription. Veuillez réessayer.");
+    } catch (error) {
+      console.error("Erreur d'inscription:", error);
+      setError(error instanceof Error ? error.message : "Erreur lors de l'inscription. Veuillez réessayer.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -188,11 +195,11 @@ const Register = () => {
                 fullWidth
                 variant="contained"
                 size="large"
-                disabled={loading}
+                disabled={isLoading}
                 className="register-button"
                 sx={{ mt: 3, mb: 2 }}
               >
-                {loading ? "Inscription..." : "S'inscrire"}
+                {isLoading ? "Inscription..." : "S'inscrire"}
               </Button>
 
               <Box className="register-links">

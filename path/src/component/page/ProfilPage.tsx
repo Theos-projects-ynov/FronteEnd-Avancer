@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import CarrouselCard from '../card/CarrouselCard';
 import CardProfil from '../card/CardProfil';
 import { ITrainer } from '../../types/trainer';
 import { genTeamPokemon } from '../../utils/genTeamPokemon';
