@@ -11,8 +11,8 @@ export interface PokemonSprites {
 }
 
 export interface PokemonType {
-  name: string;
-  image: string;
+    name: string;
+    image: string;
 }
 
 export interface PokemonTalent {
@@ -21,7 +21,7 @@ export interface PokemonTalent {
 }
 
 export interface PokemonStats {
-  hp: number;
+        hp: number;
   atk: number;
   def: number;
   spe_atk: number;
@@ -67,8 +67,8 @@ export interface IPokemon {
   stats: PokemonStats;
   resistances: PokemonResistance[];
   evolution: PokemonEvolutionChain;
-  height: string;
-  weight: string;
+    height: string;
+    weight: string;
   egg_groups: string[];
   sexe: PokemonSexe;
   catch_rate: number;

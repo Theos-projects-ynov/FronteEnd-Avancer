@@ -1,0 +1,133 @@
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  IconButton,
+  InputAdornment,
+  Alert,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import "../../style/page/login.scss";
+
+const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    // Validation simple
+    if (!email || !password) {
+      setError("Veuillez remplir tous les champs");
+      setLoading(false);
+      return;
+    }
+
+    // Simulation de connexion
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Redirection vers la page d'accueil après connexion
+      navigate("/");
+    } catch {
+      setError("Erreur de connexion. Vérifiez vos identifiants.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-container">
+        <Card className="login-card">
+          <CardContent>
+            <Box className="login-header">
+              <Typography variant="h4" component="h1" className="login-title">
+                Connexion
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Connectez-vous à votre PokéDex
+              </Typography>
+            </Box>
+
+            {error && (
+              <Alert severity="error" className="login-error">
+                {error}
+              </Alert>
+            )}
+
+            <Box component="form" onSubmit={handleSubmit} className="login-form">
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                margin="normal"
+                required
+                autoComplete="email"
+                autoFocus
+              />
+
+              <TextField
+                fullWidth
+                label="Mot de passe"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                margin="normal"
+                required
+                autoComplete="current-password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                disabled={loading}
+                className="login-button"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                {loading ? "Connexion..." : "Se connecter"}
+              </Button>
+
+              <Box className="login-links">
+                <Typography variant="body2" align="center">
+                  Pas encore de compte ?{" "}
+                  <Link to="/register" className="register-link">
+                    S'inscrire
+                  </Link>
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default Login; 
