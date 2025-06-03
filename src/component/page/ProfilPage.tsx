@@ -1,6 +1,6 @@
 import "../../style/page/profilPage.scss";
 import CardProfil from "../card/CardProfil";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatcher } from "../../hooks/useDispatcher";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
@@ -18,7 +18,10 @@ function ProfilPage() {
     }
   };
 
-  
+  useEffect(() => {
+    document.title = "PokéDex - Profil";
+  }, []);
+
 
   return (
     <>
