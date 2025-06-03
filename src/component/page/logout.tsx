@@ -9,6 +9,10 @@ const Logout = () => {
     localStorage.removeItem("token");
     navigate("/");
   }, []);
+
+  useEffect(() => {
+    document.title = "PokéDex - Déconnexion";
+  }, []);
   
   return (
     <div>

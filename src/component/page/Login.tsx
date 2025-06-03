@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Box,
@@ -25,6 +25,8 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     setError("");
     setIsLoading(true);
 
@@ -43,11 +45,19 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error("Erreur de connexion:", error);
-      setError(error instanceof Error ? error.message : "Erreur de connexion. Vérifiez vos identifiants.");
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Identifiants incorrects. Vérifiez votre email et mot de passe.");
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    document.title = "PokéDex - Connexion";
+  }, []);
 
   return (
     <div className="login-page">

@@ -49,6 +49,11 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    //change title of the page 
+    document.title = "PokéDex - Génération " + generation;
+  }, [generation]);
+
   return (
     <div className="home">
       <h1 className="title-home">PokéDex</h1>

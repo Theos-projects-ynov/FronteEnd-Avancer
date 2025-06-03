@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
-    Box,
-    Card,
-    CardContent,
-    TextField,
-    Button,
-    Typography,
-    IconButton,
-    InputAdornment,
-    Alert,
-    FormControlLabel,
-    Checkbox,
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  IconButton,
+  InputAdornment,
+  Alert,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthService } from "../../service/authService";
@@ -77,6 +77,11 @@ const Register = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    document.title = "PokéDex - Inscription";
+  }, []);
+
 
   return (
     <div className="register-page">
