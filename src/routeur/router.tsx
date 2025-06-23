@@ -5,9 +5,11 @@ import Home from "../component/page/Home";
 import NotFound from "../component/page/NotFound";
 import PokemonPage from "../component/page/PokemonPage";
 import DungeonPage from "../component/page/Dungeon";
+import BattlePage from "../component/page/Battle";
 import Login from "../component/page/Login";
 import Register from "../component/page/Register";
 import Logout from "../component/page/logout";
+import CatchPage from "../component/page/CatchPage";
 
 const router = createBrowserRouter([
   {
@@ -28,8 +30,16 @@ const router = createBrowserRouter([
         element: <ProfilPage />,
       },
       {
-        path: "/dungeon",
+        path: "/catch",
+        element: <CatchPage />,
+      },
+      {
+        path: "/donjon",
         element: <DungeonPage />,
+      },
+      {
+        path: "/combat",
+        element: <BattlePage />,
       },
       {
         path: "*",

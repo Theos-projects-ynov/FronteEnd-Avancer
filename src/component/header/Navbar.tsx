@@ -24,7 +24,10 @@ function Navbar() {
         <Link to="/" className="btn-navbar">
           Home
         </Link>
-        <Link to="/dungeon" className="btn-navbar">
+        <Link to="/catch" className="btn-navbar">
+          Capture
+        </Link>
+        <Link to="/donjon" className="btn-navbar">
           Donjon
         </Link>
         {isLoggedIn ? (
