@@ -46,6 +46,17 @@
     }
   }
 
+  .error-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+
+    .error-message {
+      text-align: center;
+      font-family: inherit;
+    }
+  }
+
   .pokemon-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

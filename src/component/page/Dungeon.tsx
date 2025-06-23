@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -67,6 +68,7 @@ function DungeonPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [pokemonNames, setPokemonNames] = useState<{ [key: number]: string }>({});
+  const navigate = useNavigate();
 
   // Fonction pour récupérer le nom du Pokémon
   const fetchPokemonName = async (pokedexId: number): Promise<string> => {
@@ -161,8 +163,12 @@ function DungeonPage() {
 
   const handleStartDungeon = () => {
     if (isTeamReady && selectedDungeon) {
-      console.log("Démarrage du donjon:", selectedDungeon.name, "avec l'équipe:", selectedPokemon);
-      // Ici tu peux ajouter la logique pour démarrer le donjon
+      navigate('/combat', {
+        state: {
+          selectedPokemon,
+          dungeonId: selectedDungeon.id
+        }
+      });
     }
   };
 

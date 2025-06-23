@@ -9,6 +9,7 @@ const Home = () => {
 
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
   const [generation, setGeneration] = useState<number>(1);
+  const [hasLoadingProblem, setHasLoadingProblem] = useState<boolean>(false);
 
   const {
     data: pokemonsData,
@@ -23,8 +24,14 @@ const Home = () => {
     console.log(isLoading);
     console.log(isError);
 
-    if (pokemonsData && !isLoading && !isError) {
-      setPokemons(pokemonsData);
+    if (!isLoading) {
+      if (isError || !pokemonsData || pokemonsData.length === 0) {
+        setHasLoadingProblem(true);
+        setPokemons([]);
+      } else {
+        setHasLoadingProblem(false);
+        setPokemons(pokemonsData);
+      }
     }
   }, [pokemonsData, isLoading, isError]);
 
@@ -101,6 +108,12 @@ const Home = () => {
         {isLoading ? (
           <div className="loading-container">
             <div className="spinner"></div>
+          </div>
+        ) : hasLoadingProblem ? (
+          <div className="error-container">
+            <p className="error-message">
+              Problème de chargement de la génération {generation}
+            </p>
           </div>
         ) : (
           <>
