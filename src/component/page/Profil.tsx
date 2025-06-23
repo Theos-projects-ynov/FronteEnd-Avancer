@@ -1,28 +1,66 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    Box,
-    Card,
-    CardContent,
-    Typography,
-    Avatar,
-    Button,
-    Chip,
-    LinearProgress,
-    Alert,
-    CircularProgress,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Button,
+  Chip,
+  LinearProgress,
+  Alert,
+  CircularProgress, useMediaQuery,
+  useTheme
 } from "@mui/material";
-import { Logout, Badge, Height, FitnessCenter } from "@mui/icons-material";
+import { Logout, Badge, Height, FitnessCenter, CatchingPokemon } from "@mui/icons-material";
 import { AuthService } from "../../service/authService";
 import type { Trainer } from "../../type/Trainer";
 import "../../style/page/profil.scss";
 
+// Cache pour les noms des Pokémon
+const pokemonNamesCache: { [key: number]: string } = {};
+
+// Types pour l'API PokeAPI
+interface PokemonName {
+  language: { name: string };
+  name: string;
+}
+
+interface PokemonSpecies {
+  names: PokemonName[];
+}
+
 const Profil = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [trainer, setTrainer] = useState<Trainer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [pokemonNames, setPokemonNames] = useState<{ [key: number]: string }>({});
+
+  // Fonction pour récupérer le nom du Pokémon
+  const fetchPokemonName = async (pokedexId: number): Promise<string> => {
+    if (pokemonNamesCache[pokedexId]) {
+      return pokemonNamesCache[pokedexId];
+    }
+
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokedexId}`);
+      const data: PokemonSpecies = await response.json();
+      const frenchName = data.names.find((name: PokemonName) => name.language.name === 'fr')?.name || 
+                        data.names.find((name: PokemonName) => name.language.name === 'en')?.name || 
+                        `Pokémon #${pokedexId}`;
+      
+      pokemonNamesCache[pokedexId] = frenchName;
+      return frenchName;
+    } catch (error) {
+      console.error(`Erreur lors de la récupération du nom pour ${pokedexId}:`, error);
+      return `Pokémon #${pokedexId}`;
+    }
+  };
 
   useEffect(() => {
     const loadTrainerProfile = async () => {
@@ -30,6 +68,19 @@ const Profil = () => {
         setIsLoading(true);
         const trainerData = await AuthService.getTrainerProfile();
         setTrainer(trainerData);
+
+        // Récupérer les noms des Pokémon
+        if (trainerData.pokemons) {
+          const names: { [key: number]: string } = {};
+          const recentPokemon = trainerData.pokemons
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .slice(0, isMobile ? 4 : 6);
+
+          for (const pokemon of recentPokemon) {
+            names[pokemon.pokedexId] = await fetchPokemonName(pokemon.pokedexId);
+          }
+          setPokemonNames(names);
+        }
       } catch (error) {
         console.error("Erreur lors du chargement du profil:", error);
         setError(error instanceof Error ? error.message : "Erreur lors du chargement du profil");
@@ -39,7 +90,7 @@ const Profil = () => {
     };
 
     loadTrainerProfile();
-  }, []);
+  }, [isMobile]);
 
   const handleLogout = async () => {
     try {
@@ -52,6 +103,16 @@ const Profil = () => {
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  // Obtenir les derniers Pokémon attrapés
+  const getRecentPokemon = () => {
+    if (!trainer?.pokemons) return [];
+    
+    const limit = isMobile ? 4 : 6;
+    return trainer.pokemons
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, limit);
   };
 
   if (isLoading) {
@@ -73,6 +134,8 @@ const Profil = () => {
       </div>
     );
   }
+
+  const recentPokemon = getRecentPokemon();
 
   return (
     <div className="profil-page">
@@ -187,6 +250,52 @@ const Profil = () => {
                         />
                       ))}
                     </Box>
+                  </CardContent>
+                </Card>
+              )}
+
+              {recentPokemon.length > 0 && (
+                <Card variant="outlined" className="info-card full-width">
+                  <CardContent>
+                    <Box display="flex" alignItems="center" gap={1} mb={2}>
+                      <CatchingPokemon />
+                      <Typography variant="h6">
+                        Derniers pokémons attrapés ({recentPokemon.length}/{trainer.pokemons?.length || 0})
+                      </Typography>
+                    </Box>
+                    <div className="pokemon-grid recent-pokemon">
+                      {recentPokemon.map((pokemon) => (
+                        <Card key={pokemon.id} variant="outlined" className="pokemon-card">
+                          <CardContent>
+                            <div className="pokemon-header">
+                              <Typography variant="subtitle1" className="pokemon-name">
+                                {pokemonNames[pokemon.pokedexId] || `Pokémon #${pokemon.pokedexId}`}
+                              </Typography>
+                              <div className="pokemon-slot">
+                                <img 
+                                  src={`https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/${pokemon.pokedexId}/regular.png`}
+                                  alt={pokemonNames[pokemon.pokedexId] || `Pokémon #${pokemon.pokedexId}`}
+                                  className="pokemon-image"
+                                  onError={(e) => {
+                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4xKSIvPgo8dGV4dCB4PSIzMCIgeT0iMzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC41KSIgZm9udC1zaXplPSIxNiI+Pz88L3RleHQ+Cjwvc3ZnPg==';
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <Box className="pokemon-details">
+                              <Typography variant="body2">
+                                Pokédex #{pokemon.pokedexId}
+                              </Typography>
+                              <Chip 
+                                label={`Niv. ${pokemon.level}`} 
+                                size="small" 
+                                color="primary"
+                              />
+                            </Box>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               )}

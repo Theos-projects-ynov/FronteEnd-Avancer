@@ -21,6 +21,36 @@ export type ITrainer = {
   image: string;
 };
 
+// Types pour les mouvements Pokémon
+export interface PokemonMove {
+  name: string;
+  type: string;
+  power: number | null;
+  accuracy: number | null;
+  pp: number;
+  damageClass: string;
+}
+
+export interface PokemonOwnedMove {
+  id: string;
+  moveId: number;
+  move: PokemonMove;
+}
+
+// Type pour les Pokémon possédés par le trainer
+export interface OwnedPokemon {
+  id: string;
+  pokedexId: number;
+  boostAtk: number;
+  boostDef: number;
+  boostRes: number;
+  boostPv: number;
+  level: number;
+  genre: string;
+  createdAt: string;
+  pokemonOwnedMoves: PokemonOwnedMove[];
+}
+
 export interface Trainer {
   id: string;
   name: string;
@@ -38,6 +68,7 @@ export interface Trainer {
   teamPokemon: unknown | null;
   isAdmin: boolean;
   createdAt: string;
+  pokemons: OwnedPokemon[];
 }
 
 export interface LoginRequest {
